@@ -1,0 +1,148 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f8ff;
+  color: #333;
+}
+
+.main-container {
+  display: flex;
+  width: 90%;
+  max-width: 1200px;
+  gap: 20px;
+}
+
+.editor-container {
+  width: 90%;
+  flex-shrink: 1;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.log-container {
+  flex-shrink: 0;
+  width: 250px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  opacity: 0.9;
+  display: flex;
+  flex-direction: column;
+}
+
+.log-container h2 {
+  text-align: center;
+}
+
+.image-area {
+  margin-bottom: 30px;
+}
+
+.image-container {
+  height: 400px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.image-status {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+.upload-section,
+.filters-section {
+  flex: 1;
+  text-align: center;
+}
+
+.btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.btn.active {
+  background-color: #28a745;
+}
+
+.upload-button {
+  display: block;
+  margin: 10px auto;
+}
+
+.filter-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.log-content {
+  font-family: monospace;
+  font-size: 14px;
+  white-space: pre-wrap;
+  margin-bottom: 10px;
+  flex-grow: 1;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.clear-button {
+  background-color: #ddd;
+  color: #555;
+  border: 1px solid #ccc;
+  width: auto;
+  margin: 10px 0;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  align-self: stretch;
+  transition: background-color 0.3s ease;
+}
+
+.clear-button:hover {
+  background-color: #ff0000;
+  color: white;
+}
