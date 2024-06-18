@@ -78,36 +78,36 @@ clearLogsButton.addEventListener("click", () => {
   logsContainer.innerHTML = "";
 });
 
-WebAssembly.instantiateStreaming(
-  fetch("./editor/target/wasm32-unknown-unknown/release/editor.wasm")
-).then(({ instance }) => {
+async function applyGrayscaleFilterWasm() {
+  const imageElement = document.getElementById("image");
+  const { canvas, context } = imageToCanvas(imageElement);
+  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+
+  const { instance } = await WebAssembly.instantiateStreaming(
+    fetch("./editor/target/wasm32-unknown-unknown/release/editor.wasm")
+  );
+
   const { memory, allocate, deallocate, grayscaleFilter } = instance.exports;
 
-  let ptr = 0;
-  let wasmArray = new Uint8ClampedArray();
+  const imageBytes = new Uint8Array(imageData.data.buffer);
+  const wasmPtr = allocate(imageBytes.length);
+  const wasmArray = new Uint8ClampedArray(
+    memory.buffer,
+    wasmPtr,
+    imageBytes.length
+  );
+  wasmArray.set(imageBytes);
 
-  wasmGrayscaleButton.addEventListener("click", async (event) => {
-    const image = document.getElementById("image");
-    const { canvas, context } = imageToCanvas(image);
+  const startTime = performance.now();
+  grayscaleFilter(wasmPtr, imageBytes.length);
+  const endTime = performance.now();
+  logMessage(`WASM Grayscale: ${(endTime - startTime).toFixed(2)}ms.`);
 
-    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    const u8Array = new Uint8Array(imageData.data.buffer);
+  imageData.data.set(wasmArray);
+  context.putImageData(imageData, 0, 0);
+  imageElement.src = canvas.toDataURL("image/jpeg");
 
-    ptr = allocate(u8Array.length);
-    wasmArray = new Uint8ClampedArray(memory.buffer, ptr, u8Array.length);
-    wasmArray.set(u8Array);
+  deallocate(wasmPtr, imageBytes.length);
+}
 
-    const startTime = performance.now();
-    grayscaleFilter(ptr, u8Array.length);
-    const endTime = performance.now();
-
-    logMessage(`WASM Grayscale: ${(endTime - startTime).toFixed(2)}ms.`);
-
-    imageData.data.set(wasmArray);
-    context.putImageData(imageData, 0, 0);
-    image.src = canvas.toDataURL("image/jpeg");
-
-    deallocate(ptr, u8Array.length);
-    ptr = 0;
-  });
-});
+wasmGrayscaleButton.addEventListener("click", applyGrayscaleFilterWasm);
